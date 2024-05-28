@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface Products {
   id: number;
   name: string;
@@ -16,21 +14,15 @@ interface CartProps {
 }
 
 export default function Carts({ cart, handleUpdate, handleDelete }: CartProps) {
-  const [updatedQuantity, setUpdatedQuantity] = useState<number>(0);
-
   const handleQuantityChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     id: number
   ) => {
     const newQuantity = parseInt(event.target.value);
-    setUpdatedQuantity(newQuantity);
-  };
-
-  const handleUpdateClick = (id: number) => {
-    const itemToUpdate = cart.find((item) => item.id === id);
-    if (itemToUpdate) {
-      handleUpdate({ ...itemToUpdate, quantity: updatedQuantity });
-    }
+    const updatedCart = cart.map((item) =>
+      item.id === id ? { ...item, quantity: newQuantity } : item
+    );
+    handleUpdate(updatedCart.find((item) => item.id === id) as Products);
   };
   return (
     <>
@@ -43,7 +35,7 @@ export default function Carts({ cart, handleUpdate, handleDelete }: CartProps) {
             <input
               name={`cart-item-quantity-${item.id}`}
               type="number"
-              value={updatedQuantity !== 0 ? updatedQuantity : item.quantity}
+              value={item.quantity}
               onChange={(event) => handleQuantityChange(event, item.id)}
               min={1}
             />
@@ -52,7 +44,7 @@ export default function Carts({ cart, handleUpdate, handleDelete }: CartProps) {
             <a
               className="label label-info update-cart-item"
               data-product={item.id}
-              onClick={() => handleUpdateClick(item.id)}
+              onClick={() => handleUpdate(item)}
             >
               Update
             </a>
