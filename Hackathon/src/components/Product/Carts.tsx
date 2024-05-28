@@ -30,7 +30,6 @@ export default function Carts({ cart, handleUpdate, handleDelete }: CartProps) {
     const itemToUpdate = cart.find((item) => item.id === id);
     if (itemToUpdate) {
       handleUpdate({ ...itemToUpdate, quantity: updatedQuantity });
-      setUpdatedQuantity(0);
     }
   };
   return (
